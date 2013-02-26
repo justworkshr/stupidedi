@@ -59,6 +59,10 @@ module Stupidedi
         autoload :FA999,  "stupidedi/guides/005010/X231A1-FA999"
       end
 
+      module X279
+        autoload :HS270,  "stupidedi/guides/005010/X279-HS270"
+      end
+
     end
   end
 end
