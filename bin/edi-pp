@@ -27,7 +27,6 @@ config.functional_group.tap do |c|
 
   c.register("004010") { Stupidedi::Versions::FunctionalGroups::FiftyTen::FunctionalGroupDef }
   c.register("005010") { Stupidedi::Versions::FunctionalGroups::FiftyTen::FunctionalGroupDef }
-# c.register("005010X279") { Stupidedi::Versions::FunctionalGroups::FiftyTen::FunctionalGroupDef }
 end
 
 config.transaction_set.tap do |c|
@@ -35,7 +34,7 @@ config.transaction_set.tap do |c|
 # c.register("005010", "HP", "835") { Stupidedi::Versions::FunctionalGroups::FiftyTen::TransactionSetDefs::HP835 }
 # c.register("005010", "HC", "837") { Stupidedi::Versions::FunctionalGroups::FiftyTen::TransactionSetDefs::HC837 }
 # c.register("005010", "FA", "999") { Stupidedi::Versions::FunctionalGroups::FiftyTen::TransactionSetDefs::FA999 }
-  c.register("005010X279", "HS", "270") { Stupidedi::Versions::FunctionalGroups::FiftyTen::TransactionSetDefs::HS270 }
+  c.register("005010X279", "HS", "270") { Stupidedi::Guides::FiftyTen::X279::HS270 }
   c.register("005010X279", "HB", "271") { Stupidedi::Versions::FunctionalGroups::FiftyTen::TransactionSetDefs::HB271 }
 
   c.register("005010X214", "HN", "277") { Stupidedi::Guides::FiftyTen::X214::HN277  }
