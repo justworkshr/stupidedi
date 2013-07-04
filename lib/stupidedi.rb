@@ -1,6 +1,7 @@
 require "bigdecimal"
 require "time"
 require "date"
+require "set"
 
 begin
   require "term/ansicolor" if $stdout.tty?
@@ -30,6 +31,7 @@ require "ruby/instance_exec"
 module Stupidedi
   autoload :Builder,      "stupidedi/builder"
   autoload :Config,       "stupidedi/config"
+  autoload :Contrib,      "stupidedi/contrib"
   autoload :Color,        "stupidedi/color"
   autoload :Versions,     "stupidedi/versions"
   autoload :Editor,       "stupidedi/editor"

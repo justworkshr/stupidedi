@@ -2,7 +2,7 @@
 
 ![Screenshot](https://raw.github.com/kputnam/stupidedi/master/doc/images/edi-pp.png)
 
-* [![Build Status](https://secure.travis-ci.org/kputnam/stupidedi.png)](http://travis-ci.org/kputnam/stupidedi)
+* [![Build Status](https://secure.travis-ci.org/kputnam/stupidedi.png?branch=master)](http://travis-ci.org/kputnam/stupidedi)
 * [GitHub project](http://github.com/kputnam/stupidedi)
 * [Human Documentation](https://github.com/kputnam/stupidedi/tree/master/doc)
 * [API Documentation](http://rubydoc.info/github/kputnam/stupidedi/master/frames)
@@ -161,6 +161,7 @@ commercial EDI translators have, so it...
 * Doesn't transmit or receive files
 * Doesn't do encryption
 * Doesn't connect to your database
+* Doesn't transmit over a dial-up modem
 * Doesn't queue messages for delivery or receipt
 * Doesn't generate acknowledgements
 * Doesn't have a graphical interface
@@ -173,7 +174,13 @@ can certainly be implemented with other code taking advantage of Stupidedi.
 Stupidedi is an opinionated library, and maybe you don't agree with
 it. Here are a few alternative libraries:
 
+* https://github.com/rjackson/X12
+* https://github.com/dlabare/ruby-edi
+* https://github.com/pstuteville/x12
 * http://www.appdesign.com/x12parser/
+  * https://github.com/swalberg/x12
+  * https://github.com/mjpete3/x12
+* https://github.com/mrcsparker/x12_parser
 * http://edi4r.rubyforge.org/edi4r/
 * http://edival.sourceforge.net/
 * http://www.edidev.com/

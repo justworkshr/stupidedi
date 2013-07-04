@@ -430,6 +430,22 @@ module Stupidedi
         end
       end
 
+      # Sequence multiple traversals together, by iteratively calling
+      # `find`. Each argument must be either a single segment ID or a
+      # list whose first element is a segment ID and remaining elements
+      # are segment constraints.
+      #
+      # @example
+      #   machine.sequence(:GS, :ST, :HL)
+      #   machine.sequence(:GS, [:ST, "837"], [:HL, nil, "20"])
+      #
+      # @return [Either<StateMachine>]
+      def sequence(pattern, *patterns)
+        patterns.inject(find(*pattern)) do |m, p|
+          m = m.flatmap{|n| n.find(*p) }
+        end
+      end
+
     private
 
       # @return [Either<StateMachine>]
@@ -444,7 +460,13 @@ module Stupidedi
           instructions = zipper.node.instructions.matches(filter_tok, true)
           reachable  ||= !instructions.empty?
 
-          instructions.each do |op|
+          grouped = instructions.runs do |a,b|
+            a.push == b.push &&
+              a.pop_count == b.pop_count &&
+                a.drop_count == b.drop_count
+          end
+
+          grouped.each do |group|
             break if matched
 
             # Every transition follows the same shape
@@ -453,11 +475,12 @@ module Stupidedi
             # 3. Move downward a number of nodes
             # 4. Stop on a segment
 
+            op_,  = group
             state = zipper
             value = zipper.node.zipper
 
             # 1. Move upward (possibly zero times)
-            op.pop_count.times do
+            op_.pop_count.times do
               value = value.up
               state = state.up
             end
@@ -465,11 +488,21 @@ module Stupidedi
             # 2. We know from the instruction `op` the *maximum* number of
             #    nodes to move left, but not exactly how many. Instead, we
             #    know what the InstructionTable is when we get there.
-            target = zipper.node.instructions.pop(op.pop_count).drop(op.drop_count)
+            target = zipper.node.instructions.pop(op_.pop_count).drop(op_.drop_count)
+
+            # 3. If the segment we're searching for belongs in a new subtree,
+            #    but it's not the only segment that might have "opened" that
+            #    subtree (eg, Summary Table in 835 can begin with PLB or SE)
+            #    then maybe the segment we're looking for comes *after* the
+            #    first segment in this subtree.
+            #
+            #    This is computed lazily below: non_leaders ||= ...
+            non_leaders = nil
 
             until state.last?
               state = state.next
               value = value.next
+              ops   = group
 
               # 2. Even if the InstructionTable matches, we still need to
               #    descend to some segment and compare it to the criteria. In
@@ -480,27 +513,6 @@ module Stupidedi
                 #    descend to a segment, but we have to be careful...
                 _value = value
                 _state = state
-
-                # 3. If the segment we're searching for belongs in a new subtree,
-                #    but it's not the only segment that might have "opened" that
-                #    subtree (eg, Summary Table in 835 can begin with PLB or SE)
-                #    then maybe the segment we're looking for comes *after* the
-                #    first segment in this subtree.
-                single   = op.push.nil?
-                single ||= op.segment_use.nil?
-                single ||= 1 >= zipper.node.instructions.instructions.count do |x|
-                  x.push.present? and
-                   (# This is hairy, but we know the instruction is pushing some
-                    # number of nested subtrees. We know from each AbstractState
-                    # subclass that we both either push a single subtree
-                    op.segment_use.parent.eql?(x.segment_use.try(:parent)) or
-                    # Or this instruction pushes one subtree while the other one
-                    # pushes two (eg, a new loop inside of a table)
-                    op.segment_use.parent.eql?(x.segment_use.try(:parent).try(:parent)) or
-                    # Or this instruction pushes two subtrees (eg, a new loop in
-                    # a new table) and the other also pushes two subtrees.
-                    op.segment_use.parent.parent.eql?(x.segment_use.try(:parent)))
-                end
 
                 unless _value.node.segment?
                   _value = _value.down
@@ -525,7 +537,7 @@ module Stupidedi
                       # GS, and ST, because we can't know the SegmentUse until we
                       # deconstruct the token and looked up the versions numbers
                       # in the Config.
-                      (op.segment_use.nil? or op.segment_use.eql?(__value.node.usage)) \
+                      ops.any?{|op| op.segment_use.nil? or op.segment_use.eql?(__value.node.usage) } \
                         and not filter?(filter_tok, __value.node)
                     end
 
@@ -539,7 +551,25 @@ module Stupidedi
                     break
                   end
 
-                  break if single
+                  ops = non_leaders     ||= group.reject do |op|
+                    op.push.nil?        ||
+                    op.segment_use.nil? ||
+                    1 >= zipper.node.instructions.instructions.count do |x|
+                      x.push.present? and
+                       (# This is hairy, but we know the instruction is pushing some
+                        # number of nested subtrees. We know from each AbstractState
+                        # subclass that we both either push a single subtree
+                        op.segment_use.parent.eql?(x.segment_use.try(:parent)) or
+                        # Or this instruction pushes one subtree while the other one
+                        # pushes two (eg, a new loop inside of a table)
+                        op.segment_use.parent.eql?(x.segment_use.try(:parent).try(:parent)) or
+                        # Or this instruction pushes two subtrees (eg, a new loop in
+                        # a new table) and the other also pushes two subtrees.
+                        op.segment_use.parent.parent.eql?(x.segment_use.try(:parent)))
+                    end
+                  end
+
+                  break if ops.empty?
                   break if _value.last?
 
                   _value = _value.next
@@ -583,7 +613,7 @@ module Stupidedi
             end
           elsif f_tok.present?
             raise Exceptions::ParseError,
-              "only simple and component elements can be filtered"
+              "only simple and composite elements can be filtered"
           end
         end
 
@@ -606,7 +636,7 @@ module Stupidedi
             end
           elsif f_tok.present?
             raise Exceptions::ParseError,
-              "only simple and component elements can be filtered"
+              "only simple and composite elements can be filtered"
           end
         end
 

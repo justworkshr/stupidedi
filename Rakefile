@@ -3,8 +3,8 @@ abspath = Pathname.new(File.dirname(__FILE__)).expand_path
 relpath = abspath.relative_path_from(Pathname.pwd)
 
 begin
-  require "rubygems"
-  require "bundler/setup"
+# require "rubygems"
+# require "bundler/setup"
 rescue LoadError
   warn "couldn't load bundler:"
   warn "  #{$!}"
@@ -13,7 +13,7 @@ end
 task :default => :spec
 
 task :console do
-  exec *%w(irb -I lib -r stupidedi)
+  exec(*%w(irb -I lib -r stupidedi))
 end
 
 begin
@@ -80,11 +80,17 @@ begin
       end
     end
   end
-rescue LoadError
+rescue LoadError => e
   task :rcov do
     warn "couldn't load rcov:"
-    warn "  #{$!}"
+    warn "  #{e}"
     exit 1
+  end
+end if RUBY_VERSION <= "1.9"
+
+if RUBY_VERSION >= "1.9"
+  # spec/spec_helper.rb will load SimpleCov
+  task :rcov => :spec do
   end
 end
 
@@ -99,10 +105,10 @@ begin
     mkdir_p "#{relpath}/doc/generated/images"
   end
 
-rescue LoadError
+rescue LoadError => e
   task :yard do
     warn "couldn't load yard:"
-    warn "  #{$!}"
+    warn "  #{e}"
     exit 1
   end
 end

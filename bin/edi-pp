@@ -8,7 +8,10 @@ GC.disable
 # This will be auto-enabled when $stdout.tty?, but -C forces color output
 require "term/ansicolor" if ARGV.delete("-C")
 
-config = Stupidedi::Config.default
+# config = Stupidedi::Config.default
+# config = Stupidedi::Config.contrib
+config = Stupidedi::Config.hipaa
+
 parser = Stupidedi::Builder::StateMachine.build(config)
 start  = Time.now
 
@@ -19,7 +22,7 @@ ARGV.each do |path|
   # parser, r = parser.read(Stupidedi::Reader.build(content))
 
   File.open(path) do |io|
-    parser, result = parser.read(Stupidedi::Reader.build(io))
+    parser, = parser.read(Stupidedi::Reader.build(io))
   end
 end
 
@@ -28,22 +31,6 @@ stop = Time.now
 parser.zipper.map{|z| pp z.root.node }.
   explain { puts "Non-deterministic state" }
 
-=begin
-# Count number of segments by traversing the tree one segment at-a-time
-begin
-  count  = 0
-  cursor = parser.first
-
-  while cursor.defined?
-    count += 1
-    cursor = cursor.flatmap{|c| c.next }
-  end
-
-  puts "#{count} segments"
-end
-=end
-
-# Count number of segments much more quickly
 begin
   a = parser.first
   b = parser.last
