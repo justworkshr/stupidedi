@@ -76,6 +76,9 @@ module Stupidedi
           autoload :DTP,
             "stupidedi/versions/functional_groups/005010/segment_defs/DTP"
 
+          autoload :EQ,
+            "stupidedi/versions/functional_groups/005010/segment_defs/EQ"
+
           # autoload :ENT,
           #   "stupidedi/versions/functional_groups/005010/segment_defs/ENT"
 
@@ -87,6 +90,9 @@ module Stupidedi
 
           autoload :GS,
             "stupidedi/versions/functional_groups/005010/segment_defs/GS"
+
+          autoload :III,
+            "stupidedi/versions/functional_groups/005010/segment_defs/III"
 
           autoload :IK3,
             "stupidedi/versions/functional_groups/005010/segment_defs/IK3"
