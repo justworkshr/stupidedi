@@ -315,7 +315,11 @@ module Stupidedi
 
                 if codes.try(&:internal?)
                   if codes.defined_at?(@value)
-                    value = "#{@value}: " << ansi.dark(codes.at(@value))
+                    if usage.allowed_values.include?(@value)
+                      value = "#{@value}: " << ansi.dark(codes.at(@value))
+                    else
+                      value = ansi.red("#{@value}: #{codes.at(@value)}")
+                    end
                   else
                     value = ansi.red(@value)
                   end
