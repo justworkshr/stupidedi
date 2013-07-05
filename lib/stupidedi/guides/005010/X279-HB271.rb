@@ -398,6 +398,15 @@ module Stupidedi
                       b::Element(e::NotUsed,     "Surface/Layer/Position Code"),
                       b::Element(e::NotUsed,     "Surface/Layer/Position Code"))),
 
+                  # The X12 standard and X279 specification place the LS and LE segments
+                  # at the same depth as 2115C and 2120C loops. This is not supported by
+                  # Stupidedi -- loops must be contain zero or more header segments, followed
+                  # by zero or more child loops, finally followed by zero or more trailer
+                  # segments.
+                  #
+                  # To work around this issue, we've constructed the "2120C LOOP HEADER"
+                  # merely to serve as a container for the LS and LE segments.
+                  #
                   d::LoopDef.build("2120C LOOP HEADER",
                     d::RepeatCount.bounded(1),
                     b::Segment(3300, s::LS, "Loop Header",
@@ -524,6 +533,17 @@ module Stupidedi
           #         b::Segment(4000, s::LE, "Loop Trailer",
           #           r::Situational, d::RepeatCount.bounded(1)))))),
 
+          # The X12 standard and X222 specification place the SE segment at what
+          # appears to be the end of Table 2 - Patient Detail. This doesn't make
+          # sense because Table 2 - Patient Detail doesn't occur if the patient
+          # is the subscriber.
+          #
+          # If we placed it in both Table 2 - Subscriber Detail and Table 2 -
+          # Patient Detail, it would incorrectly allow the segment to occur in
+          # each table.
+          #
+          # This structure doesn't match the specification, but it does ensure
+          # that the first occurrence of SE terminates the transaction set.
           d::TableDef.summary("Table 3 - Summary",
             b::Segment(4100, s::SE, "Transaction Set Trailer",
               r::Required, d::RepeatCount.bounded(1),
