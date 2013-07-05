@@ -1,0 +1,111 @@
+#!/usr/bin/env ruby
+require File.expand_path("../../lib/stupidedi", __FILE__)
+require "term/ansicolor" if ARGV.delete("-C")
+require "stupidedi"
+require "pp"
+
+class ControlStack
+  def initialize
+    @table = [{:isa => 0, :next => :isa}]
+  end
+
+  def push(key)
+    key = key.to_s.downcase.to_sym
+    raise "Invalid state" unless key == @table.last[:next]
+
+    case key
+    when :isa
+      @table.last[key] += 1
+      @table.push(@table.last.merge(:gs => 0, :next => :gs))
+      @table.last[key]
+    when :gs
+      @table.last[key] += 1
+      @table.push(@table.last.merge(:st => 0, :next => :st))
+      @table.last[key]
+    when :st
+      @table.last[key] += 1
+      @table.push(@table.last.merge(:child => 0, :next => :hl))
+      @table.last[key].to_s.rjust(4, "0")
+    when :hl
+      parent = @table.last[key]
+      child  = @table.last[:child] + 1
+      @table.push(@table.last.merge(:hl => child, :child => child, :parent => parent))
+      @table.last[key].to_s
+    end
+  end
+
+  def pop
+    raise "Stack underflow" unless @table.length >= 2
+
+    case key = @table[-2][:next]
+    when :isa, :gs
+      @table.pop[key]
+    when :st
+      @table.pop[:st].to_s.rjust(4, "0")
+    when :hl
+      @table.pop[:hl].tap do |child|
+        @table.last[:child] = child
+      end.to_s
+    end
+  end
+
+  def peek(key)
+    @table.last[key.to_s.downcase.to_sym]
+  end
+end
+
+cntrl  = ControlStack.new
+config = Stupidedi::Config.hipaa
+b      = Stupidedi::Builder::BuilderDsl.build(config, true)
+
+b.ISA "00", "", "00", "",
+      "ZZ", "CHNNYC ETIN",
+      "ZZ", "EMEDNYBAT",
+      Time.now, Time.now,
+      b.blank,                        # Separators specified below
+      "00501", cntrl.push(:ISA),
+      "1",                            # Acknowledgement requested
+      "T",                            # Test data
+      b.blank                         # Separators specified below
+b.GS  "HS", "CHNNYC ETIN", "EMEDNYBAT", Time.now, Time.now, cntrl.push(:GS), "X", "005010X279"
+b.ST  "270", cntrl.push(:ST), b.default
+b.BHT b.default, "13", b.blank, Time.now, Time.now, b.blank
+
+# 2000A INFORMATION SOURCE
+b.HL cntrl.push(:HL), cntrl.peek(:parent), "20", "1"
+  b.NM1 "PR", "2", "NY DEPT OF HEALTH", nil, nil, nil, nil, "FI", "141797357"
+
+# 2000B INFORMATION RECEIVER
+b.HL cntrl.push(:HL), cntrl.peek(:parent), "21", "1"
+  b.NM1 "FA", "2", "BRONX HEALTH CENTER", nil, nil, nil, nil, "XX", "MEDICAID ID"
+  b.REF "EO", "8-DIGIT MMIS"
+  b.N3  "975 WESTCHESTER AVE"
+  b.N4  "BRONX", "NY", "10459"
+
+# 2000C SUBSCRIBER LEVEL
+b.HL cntrl.push(:HL), cntrl.peek(:parent), "22", "0"
+  b.TRN "1", "TRACE-NUMBER", "1CHNNCYEIN", "DEPARTMENT"
+  b.NM1 "IL", "1", "MCFLY", "MARTY", "C", nil, nil, "MI", "WB22663P"
+  b.N3  "600 WESTCHESTER AVE"
+  b.N4  "BRONX", "NY", "10459"
+  b.DMG "D8", "19850525", "M"
+  b.DTP "291", "D8", "20130704" # Date of Service
+  b.EQ  b.repeated("98", "34", "44", "81", "A0", "A3")
+
+###############################################################################
+
+b.zipper.tap{|z| pp z.root.node }
+puts
+puts
+
+b.zipper.tap do |z|
+  separators =
+    Stupidedi::Reader::Separators.build(:segment    => "~\n",
+                                        :element    => "\n\t*",
+                                        :component  => ":",
+                                        :repetition => "^")
+
+  w = Stupidedi::Writer::Default.new(z.root, separators)
+  s = w.write
+  $stdout.puts(s)
+end

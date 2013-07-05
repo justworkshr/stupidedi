@@ -148,7 +148,7 @@ module Stupidedi
                   b::Segment(600, s::N3, "Subscriber Address",
                     r::Situational, d::RepeatCount.bounded(1),
                     b::Element(e::Required,    "Subscriber Address Line"),
-                    b::Element(e::Required,    "Subscriber Address Line")),
+                    b::Element(e::Situational, "Subscriber Address Line")),
                   b::Segment(700, s::N4, "Subscriber City, State, ZIP Code",
                     r::Situational, d::RepeatCount.bounded(1),
                     b::Element(e::Required,    "Subscriber City Name"),
