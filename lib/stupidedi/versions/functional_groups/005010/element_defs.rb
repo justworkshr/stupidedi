@@ -108,9 +108,11 @@ module Stupidedi
               "TL"  => "Testing Laboratory",
               "TTP" => "Tertiary Payer",
               "TU"  => "Third Party Repricing Organization (TPO)",
+              "VER" => "Party Performing Verification",
               "VN"  => "Vendor",
               "VY"  => "Organization Completing Configuration Change",
-              "X3"  => "Utilitazion Management Origanization"))
+              "X3"  => "Utilitazion Management Origanization",
+              "Y2"  => "Managed Care Organization"))
 
           E100  = t::ID.new(:E100 , "Currency Code"                        , 3, 3,
             s::CodeList.external("5"))

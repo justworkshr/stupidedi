@@ -65,6 +65,7 @@ module Stupidedi
 
       module X279A1
         autoload :HS270,  "stupidedi/guides/005010/X279A1-HS270"
+        autoload :HB271,  "stupidedi/guides/005010/X279A1-HB271"
       end
 
     end
