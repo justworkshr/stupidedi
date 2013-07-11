@@ -72,8 +72,8 @@ to understand, assuming a reasonable familiarity with EDI.
 The parser is designed using immutable data structures, making it thread-safe
 for runtimes that can utilize multiple cores. While in certain cases,
 immutability places higher demand on garbage collection, this has been
-mitigated with careful optimization. Input is streamed incrementally, so
-large files aren't read into memory all at once.
+mitigated with careful optimization. Input can be streamed incrementally, so
+very large files aren't read into memory all at once.
 
 ![Benchmark](https://raw.github.com/kputnam/stupidedi/master/notes/benchmark/throughput.png)
 
@@ -187,7 +187,7 @@ it. Here are a few alternative libraries:
 
 ## Examples
 
-In addition to these breif examples, see sample code in the `notes` directory
+In addition to these brief examples, see sample code in the `notes` directory
 and the human-readable Markdown documentation in `doc`.
 
 ### Utilities
@@ -277,7 +277,7 @@ b.HL "2", "1", "22", "0"
   b.DMG "D8", "19431022", "F"
 
 b.machine.zipper.tap do |z|
-  # The :component, and :repitition parameters can also be specified as elements
+  # The :component, and :repetition parameters can also be specified as elements
   # of the ISA segment, at `b.ISA(...)` above. When generating a document from
   # scratch, :segment and :element must be specified -- if you've parsed the doc
   # from a file, these params will default to whatever was used in the file, or
