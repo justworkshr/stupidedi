@@ -101,6 +101,11 @@ module Stupidedi
         end
       end
 
+      # @return [Either<Values::SegmentVal>>]
+      def segmentn
+        segment.map(&:node)
+      end
+
       # Extracts the *mth* element from the current segment, if the current
       # state is deterministic. Accepts optional arguments to extract a specific
       # occurrence of a repeated element and/or a specific component from a
@@ -184,6 +189,11 @@ module Stupidedi
             Either.success(value.child(n - 1))
           end
         end
+      end
+
+      # @return [Either<Zipper::AbstractCursor<Values::AbstractElementVal>>]
+      def elementn(m, n = nil, o = nil)
+        element(m, n, o).map(&:node)
       end
 
       # @group Navigating the Tree
@@ -420,14 +430,22 @@ module Stupidedi
         __count(true, id, elements)
       end
 
+      # @yieldparam   [StateMachine]
+      # @yieldreturn  [Object]
+      # @return       [Either<Array<Object>>]
       def iterate(id, *elements)
+        a = []
         m = find(id, *elements)
+        return m unless m.defined?
+
         while m.defined?
           m = m.flatmap do |n|
-            yield(n)
+            a << yield(n)
             n.find(id, *elements)
           end
         end
+
+        Either.success(a)
       end
 
       # Sequence multiple traversals together, by iteratively calling
