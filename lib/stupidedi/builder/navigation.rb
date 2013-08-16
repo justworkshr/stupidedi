@@ -460,7 +460,7 @@ module Stupidedi
       # @return [Either<StateMachine>]
       def sequence(pattern, *patterns)
         patterns.inject(find(*pattern)) do |m, p|
-          m = m.flatmap{|n| n.find(*p) }
+          m.flatmap{|n| n.find(*p) }
         end
       end
 
@@ -473,7 +473,7 @@ module Stupidedi
 
         @active.each do |zipper|
           matched      = false
-          filter_tok   = mksegment_tok(zipper.node.segment_dict, id, elements, nil)
+          filter_tok   = mksegment_tok(zipper.node.segment_dict, id, elements, nil, true)
 
           instructions = zipper.node.instructions.matches(filter_tok, true)
           reachable  ||= !instructions.empty?
@@ -629,7 +629,10 @@ module Stupidedi
             f_tok.component_toks.zip(e_val.children) do |c_tok, c_val|
               return true unless c_tok.blank? or c_val == c_tok.value
             end
+          elsif f_tok.repeated?
+            # TODO
           elsif f_tok.present?
+            # TODO fix error message
             raise Exceptions::ParseError,
               "only simple and composite elements can be filtered"
           end
