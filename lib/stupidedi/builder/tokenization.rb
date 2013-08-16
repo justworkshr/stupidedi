@@ -161,8 +161,6 @@ module Stupidedi
         element_toks = []
 
         if element_use.composite?
-          # TODO: predicates like :subset, :superset, :equal aren't
-          # implemented for repeated composite elements
           allowed = [:repeated, :blank, :not_used, nil] 
           allowed.concat([:superset, :subset, :equal]) if predicate_tag
 
