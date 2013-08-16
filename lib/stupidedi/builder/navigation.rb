@@ -630,25 +630,23 @@ module Stupidedi
               return true unless c_tok.blank? or c_val == c_tok.value
             end
           elsif f_tok.repeated?
+            next if f_tok.element_toks.empty?
+
             if e_val.definition.composite?
-              # TODO
               raise Exceptions::ParseError,
                 "repeated composite elements cannot be filtered"
             end
 
+            # While an empty set of values in the syntax tree is indeed a
+            # subset of whatever filter set was provided, the user probably
+            # wants at least *one* element to be present from the filter set.
+            return true unless e_val.children.present?
+
+            # TODO: This implementation only works for AN and ID elements.
             r_toks = Stupidedi::Sets.build(f_tok.element_toks.map{|r_tok| r_tok.value })
             r_vals = Stupidedi::Sets.build(e_val.children    .map{|r_val| r_val.to_s  })
 
-            # TODO: this implementation of :superset is clean and efficient
-            # but works only for ID and AN values. Need to implement other
-            # predicates like :subset, :equal
-            next if r_toks.blank?
-
-            # Yes, no repeated values is an empty set, which is technically a
-            # subset of anything the user provided, but the user most likely
-            # wants at least *one* element to be present from the filter set.
-            return true unless r_vals.present?
-
+            # TODO: Implement other predicates like subset, equal, etc
             return true unless r_vals.superset?(r_toks)
           elsif f_tok.present?
             # TODO fix error message
