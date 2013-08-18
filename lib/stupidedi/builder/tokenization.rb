@@ -55,10 +55,37 @@ module Stupidedi
       # @endgroup
       #########################################################################
 
+      #########################################################################
+      # @group Repeated Element Predicates
+
+      # Returns repeated elements that contain all of the given values
+      #
+      # @return [void]
+      def superset(*values)
+        [:superset, values, nil]
+      end
+
+      # Matches repeated elements that contain only the given values
+      #
+      # @return [void]
+      # def subset(*values)
+      #   [:subset, values, nil]
+      # end
+
+      # Matches repeated elements that contain exactly the given values
+      #
+      # @return [void]
+      # def elements(*values)
+      #   [:equal, values, nil]
+      # end
+
+      # @endgroup
+      #########################################################################
+
     private
 
       # @return [Reader::SegmentTok]
-      def mksegment_tok(segment_dict, id, elements, position)
+      def mksegment_tok(segment_dict, id, elements, position, predicates = false)
         id = id.to_sym
         element_toks = []
 
@@ -98,12 +125,15 @@ module Stupidedi
 
             if e_use.repeatable?
               # Repeatable composite or non-composite
-              unless [:repeated, :blank, :not_used, nil].include?(e_tag)
+              tags = [:repeated, :blank, :not_used, nil]
+              tags.concat([:subset, :superset, :disjoint, :equal]) if predicates
+
+              unless tags.include?(e_tag)
                 raise ArgumentError,
                   "#{designator} is a repeatable element"
               end
 
-              element_toks << mkrepeated_tok(e_val || [], e_use, designator, e_position || position)
+              element_toks << mkrepeated_tok(e_tag, e_val || [], e_use, designator, e_position || position)
             elsif e_use.composite?
               unless [:composite, :not_used, :blank, nil].include?(e_tag)
                 raise ArgumentError,
@@ -127,10 +157,18 @@ module Stupidedi
       end
 
       # @return [Reader::RepeatedElementTok]
-      def mkrepeated_tok(elements, element_use, designator, position)
+      def mkrepeated_tok(predicate_tag, elements, element_use, designator, position)
         element_toks = []
 
         if element_use.composite?
+          allowed = [:repeated, :blank, :not_used, nil] 
+          allowed.concat([:superset, :subset, :equal]) if predicate_tag
+
+          unless allowed.include?(predicate_tag)
+            raise ArgumentError,
+              "#{designator} is a composite element"
+          end
+
           elements.each do |e_tag, e_val, e_position|
             unless [:composite, :not_used, :blank, nil].include?(e_tag)
               raise ArgumentError,
@@ -150,6 +188,7 @@ module Stupidedi
           end
         end
 
+        # TODO: Need to do something with predicate_tag here.
         Reader::RepeatedElementTok.build(element_toks, position)
       end
 

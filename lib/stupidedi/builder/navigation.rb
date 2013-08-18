@@ -460,7 +460,7 @@ module Stupidedi
       # @return [Either<StateMachine>]
       def sequence(pattern, *patterns)
         patterns.inject(find(*pattern)) do |m, p|
-          m = m.flatmap{|n| n.find(*p) }
+          m.flatmap{|n| n.find(*p) }
         end
       end
 
@@ -473,7 +473,7 @@ module Stupidedi
 
         @active.each do |zipper|
           matched      = false
-          filter_tok   = mksegment_tok(zipper.node.segment_dict, id, elements, nil)
+          filter_tok   = mksegment_tok(zipper.node.segment_dict, id, elements, nil, true)
 
           instructions = zipper.node.instructions.matches(filter_tok, true)
           reachable  ||= !instructions.empty?
@@ -629,7 +629,27 @@ module Stupidedi
             f_tok.component_toks.zip(e_val.children) do |c_tok, c_val|
               return true unless c_tok.blank? or c_val == c_tok.value
             end
+          elsif f_tok.repeated?
+            next if f_tok.blank?
+
+            if e_val.definition.composite?
+              raise Exceptions::ParseError,
+                "repeated composite elements cannot be filtered"
+            end
+
+            # While an empty set of values in the syntax tree is indeed a
+            # subset of whatever filter set was provided, the user probably
+            # wants at least *one* element to be present from the filter set.
+            return true unless e_val.children.present?
+
+            # TODO: This implementation only works for AN and ID elements.
+            r_toks = Stupidedi::Sets.build(f_tok.element_toks.map{|r_tok| r_tok.value })
+            r_vals = Stupidedi::Sets.build(e_val.children    .map{|r_val| r_val.to_s  })
+
+            # TODO: Implement other predicates like subset, equal, etc
+            return true unless r_vals.superset?(r_toks)
           elsif f_tok.present?
+            # TODO fix error message
             raise Exceptions::ParseError,
               "only simple and composite elements can be filtered"
           end
@@ -644,14 +664,33 @@ module Stupidedi
         return true unless filter_tok.id == invalid_val.id
 
         children = invalid_val.segment_tok.element_toks
-        filter_tok.element_toks.zip(children) do |f_tok, e_tok|
+        filter_tok.element_toks.zip(children) do |f_tok, e_val|
           if f_tok.simple?
-            return true unless f_tok.blank? or f_tok.value == e_tok.value
+            return true unless f_tok.blank? or f_tok.value == e_val.value
           elsif f_tok.composite?
-            children = e_tok.component_toks
-            f_tok.component_toks.zip(children) do |f_com, e_com|
-              return true unless f_com.blank? or f_com.value == e_com.value
+            children = e_val.component_toks
+            f_tok.component_toks.zip(children) do |c_tok, c_val|
+              return true unless c_tok.blank? or c_tok.value == c_val.value
             end
+          elsif f_tok.repeated?
+            next if f_tok.blank?
+
+            if e_val.definition.composite?
+              raise Exceptions::ParseError,
+                "repeated composite elements cannot be filtered"
+            end
+
+            # While an empty set of values in the syntax tree is indeed a
+            # subset of whatever filter set was provided, the user probably
+            # wants at least *one* element to be present from the filter set.
+            return true unless e_val.children.present?
+
+            # TODO: This implementation only works for AN and ID elements.
+            r_toks = Stupidedi::Sets.build(f_tok.element_toks.map{|r_tok| r_tok.value })
+            r_vals = Stupidedi::Sets.build(e_val.children    .map{|r_val| r_val.to_s  })
+
+            # TODO: Implement other predicates like subset, equal, etc
+            return true unless r_vals.superset?(r_toks)
           elsif f_tok.present?
             raise Exceptions::ParseError,
               "only simple and composite elements can be filtered"

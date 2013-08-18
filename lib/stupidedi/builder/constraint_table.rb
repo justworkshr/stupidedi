@@ -103,73 +103,10 @@ module Stupidedi
 
         # @return [Array<Instruction>]
         def matches(segment_tok, strict)
-          invalid = true  # Were all possibly distinguishing elements invalid?
-          present = false # Were any possibly distinguishing elements present?
+          present, match = unique_match(segment_tok, strict)
+          return match unless match.nil?
 
-          @__basis ||= basis(shallowest(@instructions))
-          @__basis.head.each do |(n, m), map|
-            value = deconstruct(segment_tok.element_toks, n, m)
-
-            case value
-            when nil, :not_used, :default
-              # ignore
-            else
-              singleton = map.at(value)
-              present   = true
-
-              unless singleton.nil?
-                return singleton
-              else
-                if strict
-                  designator = "#{segment_tok.id}#{'%02d' % (n + 1)}"
-                  designator << "-%02d" % m unless m.nil?
-
-                  raise ArgumentError,
-                    "#{value.inspect} is not allowed in #{designator}"
-                end
-              end
-            end
-          end
-
-          # If we reach this line, none of the present elements could, on its
-          # own, narrow the search space to a single Instruction. We now test
-          # the combination of elements to iteratively narrow the search space
-          space = @instructions
-
-          # @todo: These filters should be ordered by probable effectiveness,
-          # so we narrow the search space by the largest amount in the fewest
-          # number of steps.
-          @__basis.last.each do |(n, m), map|
-            value = deconstruct(segment_tok.element_toks, n, m)
-
-            unless value.nil?
-              subset  = map.at(value)
-              present = true
-
-              unless subset.blank?
-                invalid = false
-                space  &= subset
-
-                if space.length <= 1
-                  return space
-                end
-              else
-                if strict
-                  designator = "#{segment_tok.id}#{'%02d' % n}"
-                  designator << "-%02d" % m unless m.nil?
-
-                  raise ArgumentError,
-                    "#{value.inspect} is not allowed in #{designator}"
-                end
-              end
-            end
-          end
-
-          if invalid and present
-            []
-          else
-            space
-          end
+          narrow_search(segment_tok, present, strict)
         end
 
       private
@@ -370,7 +307,230 @@ module Stupidedi
           end
         end
 
-        # Return the value of the `m`-th elemnt, or if `n` is not nil, return
+        def unique_match(segment_tok, strict)
+          # Were any uniquely distinguishing elements present in the input?
+          present = false
+
+          @__basis ||= basis(shallowest(@instructions))
+          @__basis.first.each do |(n, m), map|
+            element_tok = segment_tok.element_toks.at(n)
+            next unless element_tok
+
+            designator = strict ?
+              "#{segment_tok.id}#{'%02d' % (n + 1)}" : nil
+
+            present_, answer  =
+              if element_tok.repeated?
+                unique_repeated(element_tok, m, map, designator)
+              else
+                unique_singular(deconstruct(element_tok, m), map, designator)
+              end
+
+            present ||= present_
+            return present, answer if answer
+          end
+
+          return present, nil
+        end
+
+        def narrow_search(segment_tok, present, strict)
+          # If we reach this line, none of the present elements could, on its
+          # own, narrow the search space to a single Instruction. We now test
+          # the combination of elements to iteratively narrow the search space
+          space = @instructions
+
+          present_ok = present # were any distinguishing elements present?
+          present_xx = true    # were all distinguishing elements invalid (if present)?
+
+          @__basis ||= basis(shallowest(@instructions))
+          @__basis.last.each do |(n, m), map|
+            element_tok = segment_tok.element_toks.at(n)
+            next unless element_tok
+
+            designator = "#{segment_tok.id}#{'%02d' % n}"
+
+            presentok_, presentxx_, space =
+              if element_tok.repeated?
+                # TODO: This only implements :superset, which means we're searching
+                # for any instructions that match *all* given element occurences
+                narrow_repeated_superset(element_tok, m, map, designator, space)
+              else
+                narrow_singular(element_tok, m, map, designator, space)
+              end
+
+            present_ok ||= presentok_
+            present_xx &&= presentxx_
+            return space if space.size <= 1
+          end
+
+          if present_ok and present_xx
+            # The segment token *did* have values for distinguishing element
+            # locations, but every one of them was an invalid value. Instead
+            # of returning all of @instructions, we'll give up on this one.
+            []
+          else
+            # We can still return the entire @instructions space if the segment
+            # token just didn't have values in the interesting locations. These
+            # instructions will at least be narrowed down by segment ID, but we
+            # still risk an explosion of states.
+            space
+          end
+        end
+
+        def unique_singular(value, map, designator)
+          present = false
+          answer  = nil
+
+          case value
+          when nil, :not_used, :default
+            # ignore
+          else
+            present = true
+            answer  = map.at(value)
+
+            if designator and answer.blank?
+              designator << "-%02d" % m unless m.nil?
+              raise ArgumentError,
+                "#{value.inspect} is not allowed in #{designator}"
+            end
+          end
+
+          return present, answer
+        end
+
+        def narrow_singular(element_tok, m, map, designator, space)
+          present_ok = false
+          present_xx = true
+          value      = deconstruct(element_tok, m)
+
+          case value
+          when nil, :not_used, :default
+            # ignore
+          else
+            subset     = map.at(value)
+            present_ok = true
+
+            unless subset.blank?
+              present_xx = false
+              space     &= subset
+            else
+              # We could immediately narrow the search space to the empty
+              # set since *no* instructions can match this invalid value.
+              # Instead we take the view that invalid input simply doesn't
+              # provide useful information for our search and continue on
+              # with the same search space we had.
+
+              if designator
+                designator << "-%02d" % m unless m.nil?
+                raise ArgumentError,
+                  "#{value.inspect} is not allowed in #{designator}"
+              end
+            end
+          end
+
+          return present_ok, present_xx, space
+        end
+
+        def unique_repeated(element_tok, m, map, designator)
+          present = false
+
+          # TODO: This only implements :superset, which means we're searching
+          # for single instruction that matches *all* given element occurrences
+          #
+          # Futhermore, this branch is can ONLY be taken when different
+          # instructions have entirely disjoint sets of allowed values. That
+          # implies as long as we're not given a contradictory set of values,
+          # the first occurrence would immediately narrow the list to one answer.
+
+          space = @instructions
+          given = []
+
+          element_tok.element_toks.each do |occurrence_tok|
+            value = deconstruct(occurrence_tok, m)
+
+            case value
+            when nil, :not_used, :default
+              # ignore
+            else
+              present = true
+              answer  = map.at(value)
+
+              unless answer.nil?
+                given << value
+                space &= answer
+              else
+                if designator
+                  designator << "-%02d" % m unless m.nil?
+                  raise ArgumentError,
+                    "#{value.inspect} is not allowed in #{designator}"
+                end
+              end
+
+              if space.empty? and designator
+                designator << "-%02d" % m unless m.nil?
+                raise ArgumentError,
+                  "#{given.uniq.join(", ")} are mutually exclusive in #{designator}"
+              end
+
+              break if space.empty?
+            end
+          end
+
+          # For :superset, we had to iterate each and every given element
+          # to make sure it's (a) value and (b) not mutually exclusive to
+          # the other elements in the list. No early exit except on fail.
+          return present, space if space.size == 1
+        end
+
+        def narrow_repeated_superset(element_tok, m, map, designator, space)
+          given      = []
+          present_ok = false
+          present_xx = true
+
+          # Extract the m'th component from each occurrence (or get the
+          # whole value of the occurrence for non-composite elements)
+          element_tok.element_toks.each do |occurrence_tok|
+            value = deconstruct(occurrence_tok, m)
+
+            case value
+            when nil, :not_used, :default
+              # ignore
+            else
+              present_ok = true
+              subset     = map.at(value)
+
+              unless answer.nil?
+                present_xx = false
+                given     << value
+                space     &= subset
+              else
+                # We could immediately narrow the search space to the empty
+                # set since *no* instructions can match this invalid value.
+                # Instead we take the view that invalid input simply doesn't
+                # provide useful information for our search and continue on
+                # with the same search space we had.
+
+                if designator
+                  designator << "-%02d" % m unless m.nil?
+                  raise ArgumentError,
+                    "#{value.inspect} is not allowed in #{designator}"
+                end
+              end
+
+              break if space.empty?
+            end
+          end
+
+          if space.empty? and present_ok and designator
+            designator << "-%02d" % m unless m.nil?
+            raise ArgumentError,
+              "#{given.uniq.join(", ")} are mutually exclusive in #{designator}"
+          end
+
+          return present_ok, present_xx, space
+        end
+
+        # Return the value of the `m`-th element, and if `n` is not nil, return
         # the value of the `n`-th component from the `n`-th element. When the
         # value is blank, the function returns `nil`.
         #
@@ -379,24 +539,14 @@ module Stupidedi
         # @param [Integer, nil] n
         #
         # @return [String, nil]
-        def deconstruct(element_toks, m, n)
-          element_tok = element_toks.at(m)
-          element_tok = element_tok.element_toks.at(0) if element_tok.try(:repeated?)
+        def deconstruct(element_tok, m)
+          return nil if element_tok.blank?
+          element_tok = element_tok.component_toks.at(m) unless m.nil?
 
-          if element_tok.blank?
-            nil
-          elsif n.nil?
-            element_tok.value
-          else
-            element_tok = element_tok.component_toks.at(n)
-
-            if element_tok.blank?
-              nil
-            else
-              element_tok.value
-            end
-          end
+          return nil if element_tok.blank?
+          element_tok.value
         end
+
       end
 
     end
