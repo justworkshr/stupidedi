@@ -2,17 +2,8 @@ module Stupidedi
   module Builder
 
     class IdentifierStack
-
-      # @param [Integer] start
-      #
-      # @yieldparam  [Integer]
-      # @yieldreturn [Integer]
-      def initialize(start = 0, &generator)
-        if block_given?
-          @state = Empty.new(start, &generator)
-        else
-          @state = Empty.new(start){|x| x + 1 }
-        end
+      def initialize(id)
+        @state = Empty.new(id)
       end
 
       # Returns the current ID from whichever level is active
@@ -67,23 +58,22 @@ module Stupidedi
       #########################################################################
 
       class Empty
-        def initialize(seed, &generator)
-          @sequence, @seed, @generator = 0, seed, generator
+        def initialize(id)
+          @count, @next, @id = 0, id, id
         end
 
         # Create a new ISA12/IEA02 Interchange Control Number
         #
         # @return [ISA]
         def isa
-          @sequence += 1
-          ISA.new(self, @seed = @generator.call(@seed))
+          ISA.new(self, @next).tap { @count += 1; @next += 1 }
         end
 
         # Number of interchanges (not used)
         #
         # @return [Integer]
         def count
-          @sequence
+          @count
         end
       end
 
@@ -91,21 +81,21 @@ module Stupidedi
         attr_reader :id
 
         def initialize(parent, id)
-          @sequence, @parent, @id = 0, parent, id
+          @count, @parent, @next, @id = 0, parent, id, id
         end
 
         # Create a new GS06/GE02 Group Control Number
         #
         # @return [GS]
         def gs
-          GS.new(self, @sequence += 1)
+          GS.new(self, @next).tap { @count += 1; @next += 1 }
         end
 
         # IEA02 Number of Functional Groups (GS..GE)
         #
         # @return [Integer]
         def count
-          @sequence
+          @count
         end
 
         # @return [Empty]
@@ -118,21 +108,21 @@ module Stupidedi
         attr_reader :id
 
         def initialize(parent, id)
-          @sequence, @parent, @id = 0, parent, id
+          @count, @parent, @next, @id = 0, parent, id, id
         end
 
         # Create a new ST02/SE02 Transaction Set Control Number
         #
         # @return [ST]
         def st
-          ST.new(self, @sequence += 1)
+          ST.new(self, @next).tap { @count += 1; @next += 1 }
         end
 
-        # GE01 Number of Transaction Sets (within current functional grouP)
+        # GE01 Number of Transaction Sets (within current functional group)
         #
         # @return [Integer]
         def count
-          @sequence
+          @count
         end
 
         # @return [ISA]
