@@ -183,6 +183,7 @@ module Stupidedi
           E143  = t::ID.new(:E143 , "Transaction Set Identifier Number"    , 3, 3,
             s::CodeList.build(
               "277" => "Health Care Information Status Notification",
+              "834" => "Benefit Enrollment and Maintenance",
               "835" => "Health Care Claim Payment/Advice",
               "837" => "Health Care Claim",
               "999" => "Implementation Acknowledgement"))
