@@ -19,6 +19,9 @@ module Stupidedi
           autoload :AMT,
             "stupidedi/versions/functional_groups/005010/segment_defs/AMT"
 
+          autoload :BGN,
+            "stupidedi/versions/functional_groups/005010/segment_defs/BGN"
+
           autoload :BHT,
             "stupidedi/versions/functional_groups/005010/segment_defs/BHT"
 
@@ -97,11 +100,14 @@ module Stupidedi
           autoload :IK5,
             "stupidedi/versions/functional_groups/005010/segment_defs/IK5"
 
-#          autoload :INS,
-#            "stupidedi/versions/functional_groups/005010/segment_defs/INS"
+          autoload :INS,
+            "stupidedi/versions/functional_groups/005010/segment_defs/INS"
 
           autoload :HCP,
             "stupidedi/versions/functional_groups/005010/segment_defs/HCP"
+
+          autoload :HD,
+            "stupidedi/versions/functional_groups/005010/segment_defs/HD"
 
           autoload :HI,
             "stupidedi/versions/functional_groups/005010/segment_defs/HI"
