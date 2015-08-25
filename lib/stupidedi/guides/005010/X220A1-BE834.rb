@@ -42,7 +42,29 @@ module Stupidedi
               b::Element(e::Required,    "Quantity Qualifier", b::Values("DT", "ET", "TO")),
               b::Element(e::Required,    "Quantity", b::MaxLength(15)),
               b::Element(e::NotUsed,     "Composite Unit of Measure"),
-              b::Element(e::NotUsed,     "Free-form Information"))))
+              b::Element(e::NotUsed,     "Free-form Information")),
+
+            d::LoopDef.build("1000A",
+              d::RepeatCount.bounded(1),
+              b::Segment(700, s::N1, "Sponsor Name",
+                r::Required, d::RepeatCount.bounded(1),
+                b::Element(e::Required,    "Entity Identifier Code", b::Values("P5")),
+                b::Element(e::Situational, "Name", b::MaxLength(60)),
+                b::Element(e::Situational, "Identification Code Qualifier", b::Values("24", "FI")),
+                b::Element(e::Situational, "Identification Code", b::MaxLength(80)),
+                b::Element(e::NotUsed,     "Entity Identifier Code"),
+                b::Element(e::NotUsed,     "Entity Relationship Code"))),
+
+            d::LoopDef.build("1000B",
+              d::RepeatCount.bounded(1),
+              b::Segment(700, s::N1, "Payer",
+                r::Required, d::RepeatCount.bounded(1),
+                b::Element(e::Required,    "Entity Identifier Code", b::Values("IN")),
+                b::Element(e::Situational, "Name", b::MaxLength(60)),
+                b::Element(e::Situational, "Identification Code Qualifier", b::Values("XV", "FI")),
+                b::Element(e::Situational, "Identification Code", b::MaxLength(80)),
+                b::Element(e::NotUsed,     "Entity Identifier Code"),
+                b::Element(e::NotUsed,     "Entity Relationship Code")))))
 
       end
     end
