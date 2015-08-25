@@ -31,7 +31,12 @@ module Stupidedi
               b::Element(e::Required,    "Reference Identification Qualifier", b::Values("38")),
               b::Element(e::Required,    "Receiver Identifier"),
               b::Element(e::NotUsed,     "Description"),
-              b::Element(e::NotUsed,     "REFERENCE IDENTIFIER"))))
+              b::Element(e::NotUsed,     "REFERENCE IDENTIFIER")),
+            b::Segment(400, s::DTP, "File Effective Date",
+              r::Situational, d::RepeatCount.bounded(1),
+              b::Element(e::Required,    "Date/Time Qualifier", b::Values("007")),
+              b::Element(e::Required,    "Date Time Period Format Qualifier", b::Values("D8")),
+              b::Element(e::Required,    "Date Time Period"))))
       end
     end
   end

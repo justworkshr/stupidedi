@@ -311,6 +311,7 @@ module Stupidedi
           E373  = t::DT.new(:E373 , "Date"                                 , 8, 8)
           E374  = t::ID.new(:E374 , "Date/Time Qualifier"                  , 3, 3,
             s::CodeList.build(
+              "007" => "Effective",
               "009" => "Process",
               "011" => "Shipped",
               "036" => "Expiration",
