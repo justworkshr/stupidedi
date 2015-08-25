@@ -123,6 +123,7 @@ module Stupidedi
               "1W"  => "Member Identification Number",
               "28"  => "Employee Identification Number",
               "2U"  => "Payer Identification Number",
+              "38"  => "Master Policy Number",
               "4N"  => "Special Payment Reference Number",
               "6P"  => "Group Number",
               "6R"  => "Provider Control Number",
