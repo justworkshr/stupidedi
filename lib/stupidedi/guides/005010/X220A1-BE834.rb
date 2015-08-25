@@ -36,7 +36,14 @@ module Stupidedi
               r::Situational, d::RepeatCount.bounded(1),
               b::Element(e::Required,    "Date/Time Qualifier", b::Values("007")),
               b::Element(e::Required,    "Date Time Period Format Qualifier", b::Values("D8")),
-              b::Element(e::Required,    "Date Time Period"))))
+              b::Element(e::Required,    "Date Time Period")),
+            b::Segment(600, s::QTY, "Transaction Set Control Totals",
+              r::Situational, d::RepeatCount.bounded(1),
+              b::Element(e::Required,    "Quantity Qualifier", b::Values("DT", "ET", "TO")),
+              b::Element(e::Required,    "Quantity", b::MaxLength(15)),
+              b::Element(e::NotUsed,     "Composite Unit of Measure"),
+              b::Element(e::NotUsed,     "Free-form Information"))))
+
       end
     end
   end
