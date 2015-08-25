@@ -12,7 +12,7 @@ module Stupidedi
 
             d::TableDef.header("Table 1 - Header",
               s:: ST.use(100, r::Mandatory, d::RepeatCount.bounded(1)),
-              s::BPR.use(200, r::Mandatory, d::RepeatCount.bounded(1)),
+              s::BGN.use(200, r::Mandatory, d::RepeatCount.bounded(1)),
               s::NTE.use(300, r::Mandatory, d::RepeatCount.unbounded),
               s::TRN.use(400, r::Optional,  d::RepeatCount.bounded(1)),
               s::CUR.use(500, r::Optional,  d::RepeatCount.bounded(1)),

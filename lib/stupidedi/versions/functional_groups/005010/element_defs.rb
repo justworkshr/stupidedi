@@ -242,6 +242,9 @@ module Stupidedi
 
           E306  = t::ID.new(:E306 , "Action Code"                          , 1, 2,
             s::CodeList.build(
+              "2"  => "Change (Update)",
+              "4"  => "Verify",
+              "RX" => "Replace",
               "U"  => "Reject",
               "WQ" => "Accept"))
 
@@ -263,7 +266,9 @@ module Stupidedi
             s::CodeList.build(
               "00" => "Original",
               "08" => "Status",
-              "18" => "Reissue"))
+              "15" => "Re-Submission",
+              "18" => "Reissue",
+              "22" => "Information Copy"))
 
           E355  = t::ID.new(:E355 , "Unit or Basis for Measurement Code"   , 2, 2,
             s::CodeList.build(

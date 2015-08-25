@@ -19,6 +19,9 @@ module Stupidedi
           autoload :AMT,
             "stupidedi/versions/functional_groups/005010/segment_defs/AMT"
 
+          autoload :BGN,
+            "stupidedi/versions/functional_groups/005010/segment_defs/BGN"
+
           autoload :BHT,
             "stupidedi/versions/functional_groups/005010/segment_defs/BHT"
 
