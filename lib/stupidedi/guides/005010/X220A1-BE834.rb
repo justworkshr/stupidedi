@@ -28,7 +28,7 @@ module Stupidedi
               b::Element(e::Situational, "Action Code", b::Values("2", "4", "RX"))),
             b::Segment(300, s::REF, "Receiver Identification",
               r::Situational, d::RepeatCount.bounded(1),
-              b::Element(e::Required,    "Reference Identification Qualifier", b::Values("EV")),
+              b::Element(e::Required,    "Reference Identification Qualifier", b::Values("38")),
               b::Element(e::Required,    "Receiver Identifier"),
               b::Element(e::NotUsed,     "Description"),
               b::Element(e::NotUsed,     "REFERENCE IDENTIFIER"))))
