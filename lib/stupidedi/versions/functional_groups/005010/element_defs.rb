@@ -73,6 +73,7 @@ module Stupidedi
               "87"  => "Pay-to Provider",
               "98"  => "Receiver",
               "AY"  => "Clearinghouse",
+              "BO"  => "Broker or Sales Office",
               "DK"  => "Ordering Physician",
               "DN"  => "Referring Provider",
               "DQ"  => "Supervising Physician",
@@ -96,7 +97,8 @@ module Stupidedi
               "SEP" => "Secondary Payer",
               "TL"  => "Testing Laboratory",
               "TTP" => "Tertiary Payer",
-              "TU"  => "Third Party Repricing Organization (TPO)"))
+              "TU"  => "Third Party Repricing Organization (TPO)",
+              "TV"  => "Third Party Administrator (TPA)"))
 
           E100  = t::ID.new(:E100 , "Currency Code"                        , 3, 3,
             s::CodeList.external("5"))

@@ -64,6 +64,17 @@ module Stupidedi
                 b::Element(e::Situational, "Identification Code Qualifier", b::Values("XV", "FI")),
                 b::Element(e::Situational, "Identification Code", b::MaxLength(80)),
                 b::Element(e::NotUsed,     "Entity Identifier Code"),
+                b::Element(e::NotUsed,     "Entity Relationship Code"))),
+
+            d::LoopDef.build("1000C",
+              d::RepeatCount.bounded(1),
+              b::Segment(700, s::N1, "TPA/Broker Name",
+                r::Situational, d::RepeatCount.bounded(1),
+                b::Element(e::Required,    "Entity Identifier Code", b::Values("BO", "TV")),
+                b::Element(e::Situational, "Name", b::MaxLength(60)),
+                b::Element(e::Situational, "Identification Code Qualifier", b::Values("XV", "FI")),
+                b::Element(e::Situational, "Identification Code", b::MaxLength(80)),
+                b::Element(e::NotUsed,     "Entity Identifier Code"),
                 b::Element(e::NotUsed,     "Entity Relationship Code")))))
 
       end
