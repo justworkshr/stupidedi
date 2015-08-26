@@ -100,8 +100,8 @@ module Stupidedi
           autoload :IK5,
             "stupidedi/versions/functional_groups/005010/segment_defs/IK5"
 
-#          autoload :INS,
-#            "stupidedi/versions/functional_groups/005010/segment_defs/INS"
+          autoload :INS,
+            "stupidedi/versions/functional_groups/005010/segment_defs/INS"
 
           autoload :HCP,
             "stupidedi/versions/functional_groups/005010/segment_defs/HCP"
