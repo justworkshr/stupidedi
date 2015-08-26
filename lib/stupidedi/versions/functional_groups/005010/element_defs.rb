@@ -47,7 +47,8 @@ module Stupidedi
               "SL" => "State License Number",
               "UP" => "Unique Physician Identification Number (UPIN)",
               "XV" => s::CodeList.external("540"),
-              "XX" => s::CodeList.external("537")))
+              "XX" => s::CodeList.external("537"),
+              "ZZ" => "Mutually Defined"))
 
           E67   = t::AN.new(:E67  , "Identification Code"                  , 2, 80)
           E81   = t:: R.new(:E81  , "Weight"                               , 1, 10)
