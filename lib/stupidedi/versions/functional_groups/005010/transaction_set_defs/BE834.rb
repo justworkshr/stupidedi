@@ -28,7 +28,8 @@ module Stupidedi
               d::LoopDef.build("2000", d::RepeatCount.bounded(1),
                 s::INS.use(100, r::Mandatory, d::RepeatCount.bounded(1)),
                 s::REF.use(200, r::Mandatory, d::RepeatCount.bounded(1)),
-                s::REF.use(200, r::Optional , d::RepeatCount.bounded(1)))))
+                s::REF.use(200, r::Optional , d::RepeatCount.bounded(1)),
+                s::DTP.use(250, r::Optional , d::RepeatCount.bounded(24)))))
 
         end
       end

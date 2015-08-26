@@ -110,9 +110,12 @@ module Stupidedi
                 b::Element(e::Required,    "Reference Identification Qualifier", b::Values("17", "1L", "23", "3H", "4A", "6O", "ABB", "D3", "DX", "F6", "Q4", "QQ", "ZZ")),
                 b::Element(e::Required,    "Receiver Identifier"),
                 b::Element(e::NotUsed,     "Description"),
-                b::Element(e::NotUsed,     "REFERENCE IDENTIFIER"))
-            )))
-
+                b::Element(e::NotUsed,     "REFERENCE IDENTIFIER")),
+              b::Segment(250, s::DTP, "Member Level Dates",
+                r::Situational, d::RepeatCount.bounded(13),
+                b::Element(e::Required,    "Date/Time Qualifier", b::Values("050", "286", "296", "297", "300", "301", "303", "336", "337", "338", "339", "340", "341", "350", "356", "357", "383", "385", "386", "393", "394", "473", "474")),
+                b::Element(e::Required,    "Date Time Period Format Qualifier", b::Values("D8")),
+                b::Element(e::Required,    "Date Time Period", b::MaxLength(35))))))
       end
     end
   end
