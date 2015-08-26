@@ -143,7 +143,20 @@ module Stupidedi
                 b::Element(e::Situational, "Communication Number"),
                 b::Element(e::NotUsed,     "Communication Number Qualifier", b::Values("AP", "BN", "CP", "EM", "EX", "FX", "HP", "TE", "WP")),
                 b::Element(e::NotUsed,     "Communication Number"),
-                b::Element(e::NotUsed,     "Contact Inquiry Reference")))))
+                b::Element(e::NotUsed,     "Contact Inquiry Reference")),
+              b::Segment(500, s::N3, "Member Residence Street Address",
+                r::Situational, d::RepeatCount.bounded(1),
+                b::Element(e::Required,    "Address Information", b::MaxLength(55)),
+                b::Element(e::Situational, "Address Information", b::MaxLength(55))),
+              b::Segment(600, s::N4, "Member City, State, ZIP Code",
+                r::Situational, d::RepeatCount.bounded(1),
+                b::Element(e::Situational, "City Name", b::MaxLength(30)),
+                b::Element(e::Situational, "State or Province Code", b::MaxLength(2)),
+                b::Element(e::Situational, "Postal Code", b::MaxLength(15)),
+                b::Element(e::Situational, "Country Code", b::MaxLength(3)),
+                b::Element(e::Situational, "Location Qualifier", b::MaxLength(2)),
+                b::Element(e::Situational, "Location Identifier", b::MaxLength(30)),
+                b::Element(e::Situational, "Country Subdivision Code", b::MaxLength(3))))))
       end
     end
   end
