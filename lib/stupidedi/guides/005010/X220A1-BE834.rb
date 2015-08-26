@@ -132,7 +132,18 @@ module Stupidedi
                 b::Element(e::Situational, "Identification Code", b::MaxLength(80)),
                 b::Element(e::NotUsed,     "Entity Relationship Code"),
                 b::Element(e::NotUsed,     "Entity Identifier Code"),
-                b::Element(e::NotUsed,     "Name Last or Organization Name")))))
+                b::Element(e::NotUsed,     "Name Last or Organization Name")),
+              b::Segment(400, s::PER, "Member Communications Numbers",
+                r::Situational, d::RepeatCount.bounded(1),
+                b::Element(e::Required,    "Contact Function Code", b::Values("IP")),
+                b::Element(e::Situational, "Name"),
+                b::Element(e::Required,    "Communication Number Qualifier", b::Values("AP", "BN", "CP", "EM", "EX", "FX", "HP", "TE", "WP")),
+                b::Element(e::Required,    "Communication Number", b::MaxLength(256)),
+                b::Element(e::Situational, "Communication Number Qualifier", b::Values("AP", "BN", "CP", "EM", "EX", "FX", "HP", "TE", "WP")),
+                b::Element(e::Situational, "Communication Number"),
+                b::Element(e::NotUsed,     "Communication Number Qualifier", b::Values("AP", "BN", "CP", "EM", "EX", "FX", "HP", "TE", "WP")),
+                b::Element(e::NotUsed,     "Communication Number"),
+                b::Element(e::NotUsed,     "Contact Inquiry Reference")))))
       end
     end
   end

@@ -315,17 +315,23 @@ module Stupidedi
           E364  = t::AN.new(:E364 , "Communication Number"                 , 1, 256)
           E365  = t::ID.new(:E365 , "Communication Number Qualifier"       , 2, 2,
             s::CodeList.build(
+              "AP" => "Alternate Telephone",
+              "BN" => "Beeper Number",
+              "CP" => "Cellular Phone",
               "EM" => "Electronic Mail",
               "EX" => "Telephone Extension",
               "FX" => "Facsimile",
+              "HP" => "Home Phone Number",
               "TE" => "Telephone",
-              "UR" => "Uniform Resource Locator (URL)"))
+              "UR" => "Uniform Resource Locator (URL)",
+              "WP" => "Work Phone Number"))
 
           E366  = t::ID.new(:E366 , "Contract Function Code"               , 2, 2,
             s::CodeList.build(
               "BL" => "Technical Department",
               "CX" => "Payers Claim Office",
-              "IC" => "Information Contact"))
+              "IC" => "Information Contact",
+              "IP" => "Insured Party"))
 
           E373  = t::DT.new(:E373 , "Date"                                 , 8, 8)
           E374  = t::ID.new(:E374 , "Date/Time Qualifier"                  , 3, 3,
