@@ -98,7 +98,20 @@ module Stupidedi
                 b::Element(e::Situational, "City Name", b::MaxLength(30)),
                 b::Element(e::Situational, "State or Province Code", b::MaxLength(2)),
                 b::Element(e::Situational, "Country Code", b::MaxLength(3)),
-                b::Element(e::Situational, "Number", b::MaxLength(9))))))
+                b::Element(e::Situational, "Number", b::MaxLength(9))),
+              b::Segment(200, s::REF, "Subscriber Identifier",
+                r::Required, d::RepeatCount.bounded(1),
+                b::Element(e::Required,    "Reference Identification Qualifier", b::Values("0F")),
+                b::Element(e::Required,    "Receiver Identifier"),
+                b::Element(e::NotUsed,     "Description"),
+                b::Element(e::NotUsed,     "REFERENCE IDENTIFIER")),
+              b::Segment(200, s::REF, "Subscriber Identifier",
+                r::Situational, d::RepeatCount.bounded(13),
+                b::Element(e::Required,    "Reference Identification Qualifier", b::Values("17", "1L", "23", "3H", "4A", "6O", "ABB", "D3", "DX", "F6", "Q4", "QQ", "ZZ")),
+                b::Element(e::Required,    "Receiver Identifier"),
+                b::Element(e::NotUsed,     "Description"),
+                b::Element(e::NotUsed,     "REFERENCE IDENTIFIER"))
+            )))
 
       end
     end

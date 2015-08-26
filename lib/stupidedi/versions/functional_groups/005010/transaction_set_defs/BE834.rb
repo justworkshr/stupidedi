@@ -26,7 +26,9 @@ module Stupidedi
 
             d::TableDef.header("Table 2 - Detail",
               d::LoopDef.build("2000", d::RepeatCount.bounded(1),
-                s::INS.use(100, r::Mandatory, d::RepeatCount.bounded(1)))))
+                s::INS.use(100, r::Mandatory, d::RepeatCount.bounded(1)),
+                s::REF.use(200, r::Mandatory, d::RepeatCount.bounded(1)),
+                s::REF.use(200, r::Optional , d::RepeatCount.bounded(1)))))
 
         end
       end
