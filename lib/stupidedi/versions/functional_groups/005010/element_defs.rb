@@ -362,6 +362,9 @@ module Stupidedi
               "339" => "Medicare End",
               "340" => "Consolidated Omnibus Budget Reconciliation Act (COBRA) begin",
               "341" => "Consolidated Omnibus Budget Reconciliation Act (COBRA) end",
+              "343" => "Premium Paid to Date End",
+              "348" => "Benefit Begin",
+              "349" => "Benefit End",
               "350" => "Education Begin",
               "351" => "Education End",
               "356" => "Eligibility Begin",
@@ -388,8 +391,10 @@ module Stupidedi
               "473" => "Medicaid Begin",
               "474" => "Medicaid End",
               "484" => "Last Menstrual Period",
+              "543" => "Last Premium Paid Date",
               "573" => "Date Claim Paid",
               "607" => "Certification Revision",
+              "695" => "Previous Period",
               "738" => "Most Recent Hemoglobin or Hematocrit or Both",
               "739" => "Most Recent Serum Creatine"))
 

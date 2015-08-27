@@ -37,7 +37,8 @@ module Stupidedi
                   s::N4.use(600, r::Optional, d::RepeatCount.bounded(1)),
                   s::DMG.use(800, r::Optional, d::RepeatCount.bounded(1)),
                 d::LoopDef.build("2300", d::RepeatCount.bounded(1),
-                  s::HD.use(2600, r::Optional, d::RepeatCount.bounded(1)))))))
+                  s::HD.use(2600, r::Optional, d::RepeatCount.bounded(1)),
+                  s::DTP.use(2600, r::Mandatory, d::RepeatCount.bounded(6)))))))
 
         end
       end

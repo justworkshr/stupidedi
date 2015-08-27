@@ -170,7 +170,7 @@ module Stupidedi
                   b::Element(e::Situational, "Quantity"),
                   b::Element(e::Situational, "Code List Qualifier Code"),
                   b::Element(e::Situational, "Industry Code"))),
-              d::LoopDef.build("2300A",
+              d::LoopDef.build("2300",
                 d::RepeatCount.bounded(99),
                 b::Segment(2600, s::HD, "Health Coverage",
                   r::Situational, d::RepeatCount.bounded(1),
@@ -182,7 +182,12 @@ module Stupidedi
                   b::Element(e::Situational, "Count", b::MaxLength(9)),
                   b::Element(e::Situational, "Count", b::MaxLength(9)),
                   b::Element(e::Situational, "Underwriting Decision Code", b::MaxLength(1)),
-                  b::Element(e::Situational, "Yes/No Condition or Response Code", b::MaxLength(1)))))))
+                  b::Element(e::Situational, "Yes/No Condition or Response Code", b::MaxLength(1))),
+                b::Segment(2700, s::DTP, "Health Coverage Dates",
+                  r::Required, d::RepeatCount.bounded(1),
+                  b::Element(e::Required, "Date/Time Qualifier", b::Values("300", "303", "343", "348", "349", "543", "695")),
+                  b::Element(e::Required, "Date Time Period Format Qualifier", b::Values("D8", "RD8")),
+                  b::Element(e::Required, "Date Time Period", b::MaxLength(35)))))))
       end
     end
   end
