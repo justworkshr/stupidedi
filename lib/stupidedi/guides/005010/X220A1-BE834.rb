@@ -117,7 +117,7 @@ module Stupidedi
                 b::Element(e::Required,    "Date Time Period Format Qualifier", b::Values("D8")),
                 b::Element(e::Required,    "Date Time Period", b::MaxLength(35)))),
 
-            d::LoopDef.build("2000A",
+            d::LoopDef.build("2100A",
               d::RepeatCount.bounded(1),
               b::Segment(300, s::NM1, "Member Name",
                 r::Required, d::RepeatCount.bounded(1),
@@ -156,7 +156,20 @@ module Stupidedi
                 b::Element(e::Situational, "Country Code", b::MaxLength(3)),
                 b::Element(e::Situational, "Location Qualifier", b::MaxLength(2)),
                 b::Element(e::Situational, "Location Identifier", b::MaxLength(30)),
-                b::Element(e::Situational, "Country Subdivision Code", b::MaxLength(3))))))
+                b::Element(e::Situational, "Country Subdivision Code", b::MaxLength(3))),
+              b::Segment(800, s::DMG, "Member Demographics",
+                r::Situational, d::RepeatCount.bounded(1),
+                b::Element(e::Situational, "Date Time Period Format Qualifier", b::Values("D8")),
+                b::Element(e::Situational, "Date Time Period", b::MaxLength(35)),
+                b::Element(e::Situational, "Gender Code", b::Values("F", "M")),
+                b::Element(e::Situational, "Marital Status Code", b::Values("B", "D", "I", "M", "R", "S", "U", "W", "X")),
+                b::Element(e::Situational, "Composite Race or Ethnicity Information"),
+                b::Element(e::Situational, "Citizenship Status Code"),
+                b::Element(e::Situational, "Country Code"),
+                b::Element(e::Situational, "Basis of Verification Code"),
+                b::Element(e::Situational, "Quantity"),
+                b::Element(e::Situational, "Code List Qualifier Code"),
+                b::Element(e::Situational, "Industry Code")))))
       end
     end
   end

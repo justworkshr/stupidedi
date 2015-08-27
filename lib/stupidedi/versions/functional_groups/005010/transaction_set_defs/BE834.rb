@@ -30,11 +30,12 @@ module Stupidedi
                 s::REF.use(200, r::Mandatory, d::RepeatCount.bounded(1)),
                 s::REF.use(200, r::Optional , d::RepeatCount.bounded(1)),
                 s::DTP.use(250, r::Optional , d::RepeatCount.bounded(24))),
-              d::LoopDef.build("2000A", d::RepeatCount.bounded(1),
+              d::LoopDef.build("2100A", d::RepeatCount.bounded(1),
                 s::NM1.use(300, r::Mandatory, d::RepeatCount.bounded(1)),
                 s::PER.use(400, r::Optional, d::RepeatCount.bounded(1)),
                 s::N3.use(500, r::Optional, d::RepeatCount.bounded(1)),
-                s::N4.use(600, r::Optional, d::RepeatCount.bounded(1)))))
+                s::N4.use(600, r::Optional, d::RepeatCount.bounded(1)),
+                s::DMG.use(800, r::Optional, d::RepeatCount.bounded(1)))))
 
         end
       end
