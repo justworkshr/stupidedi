@@ -187,7 +187,11 @@ module Stupidedi
                   r::Required, d::RepeatCount.bounded(1),
                   b::Element(e::Required, "Date/Time Qualifier", b::Values("300", "303", "343", "348", "349", "543", "695")),
                   b::Element(e::Required, "Date Time Period Format Qualifier", b::Values("D8", "RD8")),
-                  b::Element(e::Required, "Date Time Period", b::MaxLength(35)))))))
+                  b::Element(e::Required, "Date Time Period", b::MaxLength(35)))),
+            b::Segment(6900, s::SE, "Transaction Set Trailer",
+              r::Required, d::RepeatCount.bounded(1),
+              b::Element(e::Required,    "Number of Included Segments"),
+              b::Element(e::Required,    "Transaction Set Control Number")))))
       end
     end
   end
