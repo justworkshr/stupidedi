@@ -822,10 +822,13 @@ module Stupidedi
           E875  = t::ID.new(:E875 , "Maintenance Type Code"                , 3, 3,
             s::CodeList.build(
               "001" => "Change",
+              "002" => "Delete",
               "021" => "Addition",
               "024" => "Cancellation or Termination",
               "025" => "Reinstatement",
-              "030" => "Audit or Compare"))
+              "026" => "Correction",
+              "030" => "Audit or Compare",
+              "032" => "Employee Information Not Applicable"))
 
           E901  = t::ID.new(:E901 , "Reject Reason Code"                   , 2, 2,
             s::CodeList.build(
@@ -1063,6 +1066,56 @@ module Stupidedi
               "EC" => "Benefit Member Selection",
               "XN" => "Notification Only",
               "XT" => "Transfer"))
+
+          E1204 = t::AN.new(:E1204, "Plan Coverage Description"               , 1, 50)
+
+          E1205 = t::ID.new(:E1205, "Insurance Line Code"                  , 2, 3,
+            s::CodeList.build(
+              "AG"  => "Preventative Care/Wellness",
+              "AH"  => "24 Hour Care",
+              "AJ"  => "Medicare Risk",
+              "AK"  => "Mental Health",
+              "DCP" => "Dental Capitation",
+              "DEN" => "Dental",
+              "EPO" => "Exclusive Provider Organization",
+              "FAC" => "Facility",
+              "HE"  => "Hearing",
+              "HLT" => "Health",
+              "HMO" => "Health Maintenance Organization",
+              "LTC" => "Long-Term Care",
+              "LTD" => "Long-Term Disability",
+              "MM"  => "Major Medical",
+              "MOD" => "Mail Order Drug",
+              "PDG" => "Prescription Drug",
+              "POS" => "Point of Service",
+              "PPO" => "Preferred Provider Organization",
+              "PRA" => "Practitioners",
+              "STD" => "Short-Term Disability",
+              "UR"  => "Utilization Review",
+              "VIS" => "Vision"))
+
+          E1207 = t::ID.new(:E1207, "Coverage Level Code"                  , 3, 3,
+            s::CodeList.build(
+              "CHD" => "Children Only",
+              "DEP" => "Dependents Only",
+              "E1D" => "Employee and One Dependent",
+              "E2D" => "Employee and Two Dependents",
+              "E3D" => "Employee and Three Dependents",
+              "E5D" => "Employee and One or More Dependents",
+              "E6D" => "Employee and Two or More Dependents",
+              "E7D" => "Employee and Three or More Dependents",
+              "E8D" => "Employee and Four or More Dependents",
+              "E9D" => "Employee and Five or More Dependents",
+              "ECH" => "Employee and Children",
+              "EMP" => "Employee Only",
+              "ESP" => "Employee and Spouse",
+              "FAM" => "Family",
+              "IND" => "Individual",
+              "SPC" => "Spouse and Children",
+              "SPO" => "Spouse Only",
+              "TWO" => "Two Party"))
+
+          E1209 = t::ID.new(:E1209, "Underwriting Decision Code"           , 1, 1)
 
           E1216 = t::ID.new(:E1216, "Benefit Status Code"                  , 1, 1,
             s::CodeList.build(

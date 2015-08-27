@@ -106,6 +106,9 @@ module Stupidedi
           autoload :HCP,
             "stupidedi/versions/functional_groups/005010/segment_defs/HCP"
 
+          autoload :HD,
+            "stupidedi/versions/functional_groups/005010/segment_defs/HD"
+
           autoload :HI,
             "stupidedi/versions/functional_groups/005010/segment_defs/HI"
 
