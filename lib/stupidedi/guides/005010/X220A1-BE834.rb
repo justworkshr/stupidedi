@@ -79,7 +79,7 @@ module Stupidedi
                 b::Element(e::NotUsed,     "Entity Relationship Code"))),
 
             d::LoopDef.build("2000",
-              d::RepeatCount.bounded(1),
+              d::RepeatCount.Unbounded,
               b::Segment(100, s::INS, "Member Level Detail",
                 r::Required, d::RepeatCount.bounded(1),
                 b::Element(e::Required,    "Yes/No Condition or Reponse Code", b::Values("Y", "N")),
