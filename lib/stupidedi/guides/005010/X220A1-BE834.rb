@@ -176,7 +176,7 @@ module Stupidedi
                   r::Situational, d::RepeatCount.bounded(1),
                   b::Element(e::Required,    "Maintenance Type Code", b::Values("001", "002", "021", "024", "025", "026", "030", "032")),
                   b::Element(e::Situational, "Maintenance Reason Code"),
-                  b::Element(e::Situational, "Insurance Line Code", b::Values("AG", "AH", "AJ", "AK", "DCP", "EPO", "FAC", "HE", "HLT", "HMO", "LTC", "LTD", "MM", "MOD", "PDG", "POS", "PPO", "PRA", "STD", "UR", "VIS")),
+                  b::Element(e::Situational, "Insurance Line Code", b::Values("AG", "AH", "AJ", "AK", "DCP", "DEN", "EPO", "FAC", "HE", "HLT", "HMO", "LTC", "LTD", "MM", "MOD", "PDG", "POS", "PPO", "PRA", "STD", "UR", "VIS")),
                   b::Element(e::Situational, "Plan Coverage Description", b::MaxLength(50)),
                   b::Element(e::Situational, "Coverage Level Code", b::Values("CHD", "DEP", "E1D", "E2D", "E3D", "E5D", "E6D", "E7D", "E8D", "E9D", "ECH", "EMP", "ESP", "FAM", "IND", "SPC", "SPO", "TWO")),
                   b::Element(e::Situational, "Count", b::MaxLength(9)),
