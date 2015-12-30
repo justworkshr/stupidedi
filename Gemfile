@@ -3,6 +3,8 @@ source "http://rubygems.org"
 gem "called_from", :platforms => [:ruby_18, :mri_18, :mingw_18]
 gem "cantor"     , "~> 1.2.1"
 
+gem "tins"       , "1.3.0"
+
 group :development do
   gem "rake"
   gem "rspec"      ,"3.0.0"
