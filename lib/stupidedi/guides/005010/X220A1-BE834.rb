@@ -184,7 +184,7 @@ module Stupidedi
                   b::Element(e::Situational, "Underwriting Decision Code", b::MaxLength(1)),
                   b::Element(e::Situational, "Yes/No Condition or Response Code", b::MaxLength(1))),
                 b::Segment(2700, s::DTP, "Health Coverage Dates",
-                  r::Required, d::RepeatCount.bounded(1),
+                  r::Required, d::RepeatCount.bounded(6),
                   b::Element(e::Required, "Date/Time Qualifier", b::Values("300", "303", "343", "348", "349", "543", "695")),
                   b::Element(e::Required, "Date Time Period Format Qualifier", b::Values("D8", "RD8")),
                   b::Element(e::Required, "Date Time Period", b::MaxLength(35))))),
