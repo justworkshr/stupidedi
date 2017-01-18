@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/kputnam/stupidedi"
 
   s.version = Stupidedi::VERSION
-  s.date    = "2011-02-09"
+  s.date    = "2016-07-29"
   s.author  = "Kyle Putnam"
   s.email   = "putnam.kyle@gmail.com"
 
@@ -23,5 +23,6 @@ Gem::Specification.new do |s|
   s.executables       = ["edi-pp", "edi-ed"]
   s.require_path      = "lib"
 
-  s.add_dependency "cantor", "~> 1.2"
+  s.add_dependency "term-ansicolor", "~> 1.3"
+  s.add_dependency "cantor",         "~> 1.2.1"
 end

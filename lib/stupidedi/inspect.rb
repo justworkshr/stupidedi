@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
 
   #
   # When an exception is raised, in some cases `#inspect` is called on a
@@ -19,7 +22,7 @@ module Stupidedi
         "#<\#<Class:0x#{self.class.object_id.abs.to_s(16)}>"
       else
         "#<#{self.class.name}"
-      end << ":0x#{object_id.abs.to_s(16)} ...>"
+      end + ":0x#{object_id.abs.to_s(16)} ...>"
     end
   end
 

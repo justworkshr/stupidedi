@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Reader
 
     #
@@ -60,12 +63,13 @@ module Stupidedi
       # The current position as the number of elements previously read
       #
       # @return [Integer]
-      extend Forwardable
       def_delegators :position, :offset
-      
+
       # The line of the current position
       #
       # @return [Integer]
+
+      def_delegators :position, :line
 
       def_delegators :position, :line
       
@@ -75,10 +79,14 @@ module Stupidedi
       # @return [Integer]
 
       def_delegators :position, :column
+
+      def_delegators :position, :column
       
       # The file name, URI, etc that identifies the input stream
       #
       # @return [String]
+
+      def_delegators :position, :path
 
       def_delegators :position, :path
       

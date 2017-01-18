@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Values
 
     #
@@ -7,6 +11,8 @@ module Stupidedi
     class CompositeElementVal < AbstractElementVal
 
       # @return [CompositeElementDef]
+
+      def_delegators :@usage, :definition
 
       extend Forwardable
       def_delegators :@usage, :definition
@@ -19,7 +25,7 @@ module Stupidedi
       attr_reader :usage
 
       def_delegators "@children.head", :position
-        
+
       def initialize(children, usage)
         @children, @usage =
           children, usage

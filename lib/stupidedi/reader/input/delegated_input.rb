@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Reader
 
     class DelegatedInput < AbstractInput
@@ -29,14 +32,17 @@ module Stupidedi
       ########################################################################
 
       # (see AbstractInput#take)
-      extend Forwardable
       def_delegators :@delegate, :take
-      
+
       # (see AbstractInput#at)
+
+      def_delegators :@delegate, :at
 
       def_delegators :@delegate, :at
       
       # (see AbstractInput#index)
+
+      def_delegators :@delegate, :index
 
       def_delegators :@delegate, :index
       
@@ -74,6 +80,7 @@ module Stupidedi
       # (see AbstractInput#empty?)
       def_delegators :@delegate, :empty?
 
+
     
       # (see AbstractInput#==)
       def_delegators :@delegate, :==
@@ -91,7 +98,7 @@ module Stupidedi
                     elsif preview.length <= 3
                       preview.inspect
                     else
-                      (preview.take(3) << "...").inspect
+                      (preview.take(3) + "...").inspect
                     end
 
           q.text preview

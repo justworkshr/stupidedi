@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Editor
 
     class TransactionSetEd < AbstractEd
@@ -272,4 +275,3 @@ module Stupidedi
 
   end
 end
-

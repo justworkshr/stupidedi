@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Builder
 
     class Instruction
@@ -73,9 +77,9 @@ module Stupidedi
 
           # Truncate the segment name to `width` characters
           if name.length > width - 2
-            id << ": #{name.slice(0, width - 2)}.."
+            id = id + ": #{name.slice(0, width - 2)}.."
           else
-            id << ": #{name.ljust(width)}"
+            id = id + ": #{name.ljust(width)}"
           end
         end
 

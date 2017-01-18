@@ -1,11 +1,16 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Schema
 
     class AbstractElementUse < AbstractUse
       include Inspect
 
-      extend Forwardable      
       def_delegators :requirement, :forbidden?, :required?, :optional?
+
+      def_delegators :definition, :code_lists
 
       def_delegators :definition, :code_lists
       

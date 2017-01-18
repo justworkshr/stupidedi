@@ -1,4 +1,6 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
 
   #
   # This performs tail call optimization on methods declared by the programmer

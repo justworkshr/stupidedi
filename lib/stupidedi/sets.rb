@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require "cantor"
 
 module Stupidedi
+  using Refinements
 
   module Sets
   end

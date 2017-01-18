@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Schema
 
     #
@@ -29,11 +33,10 @@ module Stupidedi
       # @return [LoopDef, TableDef]
       attr_reader :parent
 
-      extend Forwardable
       def_delegators :definition, :id, :code_lists
-      
+
       def_delegators :requirement, :required?, :optional?
-      
+
       def initialize(definition, position, requirement, repeat_count, parent)
         @definition, @position, @requirement, @repeat_count, @parent =
           definition, position, requirement, repeat_count, parent

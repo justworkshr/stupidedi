@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Versions
     module FunctionalGroups
       module ThirtyTen
@@ -144,15 +147,14 @@ module Stupidedi
               include Comparable
 
               # (string any* -> any)
-              extend Forwardable
               def_delegators :value, :to_d, :to_s, :to_f, :to_c, :to_r, :to_sym, :to_str,
                 :hex, :oct, :ord, :sum, :length, :count, :index, :rindex,
                 :lines, :bytes, :chars, :each, :upto, :split, :scan, :unpack,
                 :=~, :match, :partition, :rpatition, :each, :split, :scan,
                 :unpack, :encoding, :count, :casecmp, :sum, :valid_enocding?,
                 :at, :empty?, :blank?
-              
-              
+
+
               # (string any* -> StringVal)
               extend Operators::Wrappers
               wrappers :%, :+, :*, :slice, :take, :drop, :[], :capitalize,
@@ -180,12 +182,7 @@ module Stupidedi
               def coerce(other)
                 # me, he = other.coerce(self)
                 # me <OP> he
-                if other.respond_to?(:to_str)
-                  return copy(:value => other.to_str), self
-                else
-                  raise TypeError,
-                    "cannot coerce IdentifierVal to #{other.class}"
-                end
+                return copy(:value => other.to_str), self
               end
 
               def value
@@ -234,15 +231,14 @@ module Stupidedi
               # @return [String]
               attr_reader :value
               # (string any* -> any)
-              extend Forwardable
               def_delegators :value, :to_d, :to_s, :to_f, :to_c, :to_r, :to_sym, :to_str,
                 :hex, :oct, :ord, :sum, :length, :count, :index, :rindex,
                 :lines, :bytes, :chars, :each, :upto, :split, :scan, :unpack,
                 :=~, :match, :partition, :rpatition, :each, :split, :scan,
                 :unpack, :encoding, :count, :casecmp, :sum, :valid_enocding?,
                 :at, :empty?, :blank?
-                            
-              
+
+
               # (string any* -> StringVal)
               extend Operators::Wrappers
               wrappers :%, :+, :*, :slice, :take, :drop, :[], :capitalize,
@@ -275,12 +271,7 @@ module Stupidedi
               def coerce(other)
                 # me, he = other.coerce(self)
                 # me <OP> he
-                if other.respond_to?(:to_str)
-                  return copy(:value => other.to_str), self
-                else
-                  raise TypeError,
-                    "cannot coerce IdentifierVal to #{other.class}"
-                end
+                return copy(:value => other.to_str), self
               end
 
               def valid?
@@ -319,7 +310,7 @@ module Stupidedi
 
                 if codes.try(&:internal?)
                   if codes.defined_at?(@value)
-                    value = "#{@value}: " << ansi.dark(codes.at(@value))
+                    value = "#{@value}: " + ansi.dark(codes.at(@value))
                   else
                     value = ansi.red(@value)
                   end
@@ -346,10 +337,8 @@ module Stupidedi
             def value(object, usage, position)
               if object.blank?
                 self::Empty.new(usage, position)
-              elsif object.respond_to?(:to_s)
-                self::NonEmpty.new(object.to_s.rstrip, usage, position)
               else
-                self::Invalid.new(object, usage, position)
+                self::NonEmpty.new(object.to_s.rstrip, usage, position)
               end
             rescue
               self::Invalid.new(object, usage, position)

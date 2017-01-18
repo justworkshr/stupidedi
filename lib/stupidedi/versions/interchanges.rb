@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Versions
     module Interchanges
       autoload :TwoHundred, "stupidedi/versions/interchanges/00200"

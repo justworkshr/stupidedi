@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 class Stupidedi
+  using Refinements
+
   module Editor
 
     class FortyTenEd

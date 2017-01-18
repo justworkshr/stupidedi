@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Versions
     module Interchanges
       module FourOhOne
@@ -50,6 +53,11 @@ module Stupidedi
               end
             end
           end
+
+          class SeparatorElementVal < Values::SimpleElementVal
+
+            def_delegators :@value, :to_s, :length
+
 
           class SeparatorElementVal < Values::SimpleElementVal
 

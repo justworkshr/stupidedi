@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Versions
     module FunctionalGroups
       module ThirtyTen
@@ -182,7 +185,6 @@ module Stupidedi
               # @return [BigDecimal]
               attr_reader :value
 
-              extend Forwardable
               def_delegators :@value, :to_i, :to_d, :to_f, :to_r, :to_c
 
               def initialize(value, usage, position)
@@ -201,12 +203,7 @@ module Stupidedi
               def coerce(other)
                 # self', other' = other.coerce(self)
                 # self' * other'
-                if other.respond_to?(:to_d)
-                  return copy(:value => other.to_d), self
-                else
-                  raise TypeError,
-                    "cannot coerce FloatVal to #{other.class}"
-                end
+                return copy(:value => other.to_d), self
               end
 
               def valid?
@@ -264,7 +261,8 @@ module Stupidedi
                   if truncate
                     int   = @value.to_i.to_s
                     sign  = (int < 0) ? "-" : ""
-                    return sign << int.abs.to_s.take(definition.max_length)
+                    sign  = sign + int.abs.to_s.take(definition.max_length)
+                    return sign
                   else
                     return @value.to_i.abs
                   end
@@ -289,7 +287,7 @@ module Stupidedi
                 if rounded.zero?
                   "0" * definition.min_length
                 else
-                  sign << rounded.abs.to_s("F").
+                  sign + rounded.abs.to_s("F").
                     gsub(/^0+/, ""). # leading zeros
                     gsub(/0+$/, ""). # trailing zeros
                     gsub(/\.$/, ""). # trailing decimal point
@@ -327,15 +325,11 @@ module Stupidedi
             def value(object, usage, position)
               if object.blank?
                 self::Empty.new(usage, position)
-              elsif object.respond_to?(:to_d)
-                begin
-                  self::NonEmpty.new(object.to_d, usage, position)
-                rescue ArgumentError
-                  self::Invalid.new(object, usage, position)
-                end
               else
-                self::Invalid.new(object, usage, position)
+                self::NonEmpty.new(object.to_d, usage, position)
               end
+            rescue ArgumentError
+              self::Invalid.new(object, usage, position)
             end
 
             # @endgroup

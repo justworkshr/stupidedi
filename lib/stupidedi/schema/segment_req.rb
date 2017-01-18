@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Schema
 
     # The 5010 X12 "data segment requirement designator"s include

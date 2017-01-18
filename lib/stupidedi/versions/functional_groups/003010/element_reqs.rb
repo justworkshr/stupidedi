@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Versions
     module FunctionalGroups
       module ThirtyTen
@@ -10,6 +13,7 @@ module Stupidedi
           Mandatory  = Schema::ElementReq.new(true,  false, "M")
           Optional   = Schema::ElementReq.new(false, false, "O")
           Relational = Schema::ElementReq.new(false, false, "X")
+          # Flexible   = Schema::ElementReq.new(false, false, "F")
         end
 
       end

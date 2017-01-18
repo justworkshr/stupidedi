@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Values
 
     #
@@ -10,6 +14,8 @@ module Stupidedi
     class SimpleElementVal < AbstractElementVal
 
       # @return [SimpleElementDef]
+
+      def_delegators :@usage, :definition
 
       extend Forwardable
       def_delegators :@usage, :definition

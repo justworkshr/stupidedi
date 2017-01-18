@@ -1,4 +1,6 @@
 module Stupidedi
+  using Refinements
+
   module Writer
 
     class Default
@@ -13,7 +15,7 @@ module Stupidedi
 
       #
       # @return out
-      def write(out = "")
+      def write
         common  = @separators.characters & @zipper.node.characters
         message = common.to_a.map(&:inspect).join(", ")
 
@@ -21,7 +23,7 @@ module Stupidedi
           raise Exceptions::OutputError,
             "separators #{message} occur as data"
         end
-
+        out = ""
         recurse(@zipper.node, @separators, out)
         return out
       end

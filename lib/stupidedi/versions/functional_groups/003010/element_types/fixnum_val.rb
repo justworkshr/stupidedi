@@ -1,4 +1,7 @@
+# frozen_string_literal: true
 module Stupidedi
+  using Refinements
+
   module Versions
     module FunctionalGroups
       module ThirtyTen
@@ -193,10 +196,9 @@ module Stupidedi
               # @return [BigDecimal]
               attr_reader :value
 
-              extend Forwardable
               def_delegators :@value, :to_i, :to_d, :to_f, :to_r, :to_c
-              
-              
+
+
               def initialize(value, usage, position)
                 @value = value
                 super(usage, position)
@@ -213,12 +215,7 @@ module Stupidedi
               def coerce(other)
                 # self', other' = other.coerce(self)
                 # self' * other'
-                if other.respond_to?(:to_d)
-                  return copy(:value => other.to_d), self
-                else
-                  raise TypeError,
-                    "cannot coerce FixnumVal to #{other.class}"
-                end
+                return copy(:value => other.to_d), self
               end
 
               def valid?
@@ -260,10 +257,10 @@ module Stupidedi
                 # Leading zeros must be suppressed unless necessary to satisfy a
                 # minimum length requirement
                 if truncate
-                  sign << nn.abs.to_s.take(definition.max_length).
+                  sign = sign + nn.abs.to_s.take(definition.max_length).
                                       rjust(definition.min_length, "0")
                 else
-                  sign << nn.abs.to_s.rjust(definition.min_length, "0")
+                  sign = sign + nn.abs.to_s.rjust(definition.min_length, "0")
                 end
               end
 
@@ -295,13 +292,11 @@ module Stupidedi
             def value(object, usage, position)
               if object.blank?
                 self::Empty.new(usage, position)
-              elsif object.respond_to?(:to_d)
+              else
                 # The number of fractional digits is implied by usage.precision
                 factor = 10 ** usage.definition.precision
 
                 self::NonEmpty.new(object.to_d / factor, usage, position)
-              else
-                self::Invalid.new(object, usage, position)
               end
             rescue ArgumentError
               self::Invalid.new(object, usage, position)

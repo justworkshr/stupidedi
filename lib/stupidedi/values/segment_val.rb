@@ -1,10 +1,16 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Values
 
     # @see X222 B.1.1.3.4 Data Segment
     class SegmentVal < AbstractVal
 
       # @return [SegmentDef]
+
+      def_delegators :@usage, :definition
 
       extend Forwardable
       def_delegators :@usage, :definition

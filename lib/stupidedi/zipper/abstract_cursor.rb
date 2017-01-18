@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Zipper
 
     class AbstractCursor
@@ -104,8 +108,8 @@ module Stupidedi
         lspine.each{|z| between << z.node }
         lspine.tail.reverse.each do |zipper1|
           until zipper1.last?
-            zipper2 = zipper1.next
-            between.concat(zipper2.flatten)
+            zipper1 = zipper1.next
+            between.concat(zipper1.flatten)
           end
         end
 

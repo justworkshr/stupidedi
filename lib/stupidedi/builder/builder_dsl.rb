@@ -1,4 +1,8 @@
+# frozen_string_literal: true
+
 module Stupidedi
+  using Refinements
+
   module Builder
 
     class BuilderDsl
@@ -14,7 +18,6 @@ module Stupidedi
       # @return [Boolean]
       attr_writer :strict
 
-      extend Forwardable
       def_delegators :@machine, :pretty_print, :segment, :element, :zipper, :successors, :empty?, :first?, :last?, :deterministic?
 
       def initialize(machine, strict = true)
