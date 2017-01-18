@@ -117,7 +117,6 @@ module Stupidedi
                 "required element #{descriptor} is blank"
             end
           elsif zipper.node.usage.forbidden?
-            binding.pry
             raise Exceptions::ParseError,
               "forbidden element #{descriptor} is present"
           elsif not zipper.node.allowed?
