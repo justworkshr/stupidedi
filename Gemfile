@@ -8,7 +8,7 @@ group :development do
   gem "rspec"      ,"3.0.0"
   gem "rspec-collection_matchers"
   gem "yard"       ,"~> 0.8.7"
-  gem "redcarpet"  ,"~> 2.3.0"
+  gem "redcarpet"  ,"~> 3.5.1"
   #em "rdiscount"  ,"~> 2.1.7"
 
   gem "term-ansicolor"
