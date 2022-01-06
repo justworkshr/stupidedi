@@ -7,7 +7,7 @@ group :development do
   gem "rake"
   gem "rspec"      ,"3.0.0"
   gem "rspec-collection_matchers"
-  gem "yard"       ,"~> 0.8.7"
+  gem "yard"       ,"~> 0.9.20"
   gem "redcarpet"  ,"~> 2.3.0"
   #em "rdiscount"  ,"~> 2.1.7"
 
